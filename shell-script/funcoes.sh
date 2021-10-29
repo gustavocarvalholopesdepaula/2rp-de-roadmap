@@ -1,11 +1,15 @@
-#!bin/bash
+#!/bin/bash
 
-lista_arquivos(){
-ls
- }
+#lista_arquivos(){
 
-lista_arquivos
+#declare -a DIRETORIO
+
+#}
 
 insere_texto(){
-    echo "2RP net é top"
+
+    echo $1 >> $2
+
 }
+
+

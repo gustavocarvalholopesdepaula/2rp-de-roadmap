@@ -1,11 +1,14 @@
 #!/bin/bash
 
 source ./funcoes.sh 
-insere_texto $1 $2
 
+declare -a LISTA
 
-echo "Este é o caminho:$1"
-echo "Texto qualquer:$2"
+lista_arquivos $1 LISTA
+for i in $( seq 1 ${#LISTA[@]} )
+    do
+        insere_texto $2 ${LISTA[i-1]} 
+    done
 
 
 

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#lista_arquivos(){
+lista_arquivos(){
 
-#declare -a DIRETORIO
+    LISTA=(`find $1 -type f`)
 
-#}
+}
 
 insere_texto(){
 

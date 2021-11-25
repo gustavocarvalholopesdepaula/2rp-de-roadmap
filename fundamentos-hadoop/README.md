@@ -19,6 +19,13 @@ $ df
 $ df -h
 # Mostra o espaço usado/disponível em Mb/Gb/Kb ao invés de bloco.
 
+
+$ view part 00000
+# Abri o arquivo part 00000
+
+$ wc-l part 00000
+# Conta as linhas do arquivo
+
 $ du
 # Fornece a quantidade de espaço ocupada por cada subdiretório que se encontra abaixo do diretório atual.
 

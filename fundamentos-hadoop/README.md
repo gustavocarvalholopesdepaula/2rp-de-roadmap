@@ -8,7 +8,7 @@ Para salvar um arquivo em HDFS, o Hadoop divide o arquivo em blocos, de 64 ou 12
 Alguns comandos:
 
 $ vagrant ssh pocd-cm581-dev-node/
-# Importa o conteúdo do servidor para o computador. Neste caso, o servidor é ' pocd-cm581-dev-node/ '
+# Importa o conteúdo do servidor para o computador. Neste caso, o usuário é 'vagrant' e o servidor é ' pocd-cm581-dev-node/ '
 
 $ hostname 
 # Mostra o endereço eletrônico do servidor

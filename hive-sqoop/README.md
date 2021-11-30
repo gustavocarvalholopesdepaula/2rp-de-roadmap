@@ -3,6 +3,13 @@ COMANDOS DO HIVE:
 # Cria a base de dados chamada training_retail
 CREATE DATABASE IF NOT EXISTS training_retail;
 
+# Formatos de arquivo
+TEXTFILE
+ORC
+PARQUET
+AVRO
+SEQUENCEFILE
+JSONFILE
 
 # Cria uma tabela no formato ORC chamada order_items dentro da base de dados training_retail
 CREATE TABLE training_retail.order_items (
@@ -14,10 +21,17 @@ CREATE TABLE training_retail.order_items (
   order_item_product_price FLOAT
 ) STORED AS orc;
 
+
+CREATE TABLE orders (
+  order_id INT COMMENT 'Unique order id', 
+  order_date STRING COMMENT 'Date on which order is placed',
+  order_customer_id INT COMMENT 'Customer id who placed the order',
+  order_status STRING COMMENT 'Current status of the order'
+) COMMENT 'Table to save order level details'
 SHOW CREATE TABLE orders;
 
 # Mostra a estrutura da tabela e seu conteúdo.
-
+# Aqui mostra como comentar nas tabelas hive.
 
 # Mostra todas as caraterísticas da tabela
 DESCRIBE FORMATTED order_items
@@ -1007,6 +1021,19 @@ FROM orders JOIN order_items
 ON order_id = order_item_order_id
 WHERE order_status IN ('COMPLETE', 'CLOSED')
 GROUP BY order_date;
-
-
+===============================================================================================
+CREATE TABLE work_dataeng.pokemon_test (
+idnum INT,
+name STRING,
+hp INT,
+speed INT,
+attack INT,
+special_attack INT,
+defense INT,
+special_defense INT,
+generation INT
+)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
+tblproperties ("skip.header.line.count"="1")
+STORED AS TEXTFILE;
 

@@ -1,42 +1,8 @@
 
-git checkout -b hive-sqoop
+-- Agora chegou a hora de inserir os dados nas tabelas
 
-# Cria a branch ' hive-sqoop ' e a coloca em uso simultaneamente
-# No Visual Studio Code, ir em ' 2rp-de-roadmap, que é nosso repositório, selecionar 'New Folder' e chamar de 'hive-sqoop'.
-
-
-# Dentro dessa subpasta, selecionar ' New File ' e nomear de ' cria-tabelas.hql
-# Fazer o login no HUE e na base de dados work_dataeng, criar as 2 tabelas no formato ORC, seguem os scripts:
-
-CREATE TABLE work_dataeng.generation_gustavo (
-generation INT,
-date_introduced DATE
-) STORED as orc; 
-
-
-
-CREATE TABLE work_dataeng.pokemon_gustavo ( 
-idnum INT,
-name STRING,
-hp INT,
-speed INT,
-attack INT,
-special_attack INT,
-defense INT,
-special_defense INT,
-generation INT
-) STORED AS orc;
-
-# Para visualizar os resultados, poderíamos fazer :
-
-SHOW CREATE TABLE work_dataeng.generation_gustavo;
-
-SHOW CREATE TABLE work_dataeng.pokemon_gustavo;
-
-# Agora chegou a hora de inserir os dados nas tabelas
-
-# Os dados necessários podem ser encontrados no repositório 'squad-de-roadmap' dentro da pasta 'materiais-complementares/nivel-1
-# No caso da tabela work_dataeng.generation_gustavo, como são poucos dados, podemos inseri-los manualmente, da seguinte maneira:
+-- Os dados necessários podem ser encontrados no repositório 'squad-de-roadmap' dentro da pasta 'materiais-complementares/nivel-1
+-- No caso da tabela work_dataeng.generation_gustavo, como são poucos dados, podemos inseri-los manualmente, da seguinte maneira:
 
 INSERT INTO TABLE work_dataeng.generation_gustavo VALUES
 (1,'1996-02-27'),
@@ -47,16 +13,12 @@ INSERT INTO TABLE work_dataeng.generation_gustavo VALUES
 (6,'2010-12-13'),
 (7,'2016-11-18');
 
-# Truncando a tabela e inserindo os dados novamente, podemos utilizar o comando SELECT * FROM e visualizar os dados da tabela
-
-TRUNCATE TABLE work_dataeng.generation_gustavo 
-
 
 SELECT * FROM work_dataeng.generation_gustavo 
-# Primeira tabela finalizada
+-- Primeira tabela finalizada
 
-# Agora vamos inserir os dados na segunda tabela
-# O primeiro passo é criar uma tabela no formato CSV. Isso pode ser feito da seguinte maneira:
+-- Agora vamos inserir os dados na segunda tabela
+-- O primeiro passo é criar uma tabela no formato CSV. Isso pode ser feito da seguinte maneira:
 
 
 CREATE TABLE work_dataeng.pokemon_gustavo_teste (
@@ -73,26 +35,50 @@ generation INT
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE;
 
-# Usando o comando SHOW CREATE TABLE podemos visualizar nossa tabela, que ainda não tem dados.
+-- Usando o comando SHOW CREATE TABLE podemos visualizar a estrutura da nossa tabela, que ainda não tem dados.
 
-SHOW CREATE TABLE work-dataeng.pokemon_gustavo_teste
+SHOW CREATE TABLE work_dataeng.pokemon_gustavo_teste
 
-# Agora, vamos enviar o arquivo pokemon.csv para o cluster, para então conseguir inserir os dados na tabela.
-# No cmder, utilizar os comandos:
+-- Agora, vamos enviar o arquivo pokemon.csv para o cluster, para então conseguir inserir os dados na tabela.
+-- No cmder, utilizar os comandos:
 
 $ ssh 2rp-gustavo@ocspbasprdap01
-# e
+
 $ kinit -kt 2rp-gustavo.keytab 2rp-gustavo
 
-# No hive :
- LOAD DATA INPATH '/ user/hive/warehouse/ pokemon.csv' INTO TABLE work_dataeng.pokemon_gustavo_teste;
+-- No hive :
+LOAD DATA INPATH '/ user/hive/warehouse/ pokemon.csv' INTO TABLE work_dataeng.pokemon_gustavo_teste;
 
-# Agora, podemos enviar os dados para a tabela definitiva:
+-- Agora, podemos enviar os dados para a tabela definitiva:
 
 INSERT INTO TABLE work_dataeng.pokemon_gustavo SELECT * FROM work_dataeng.pokemon_gustavo_teste;
+-- Segunda tabela finalizada.
+=================================================================================================
+-- OBSERVAÇÃO: essa tabela ficará com um 'problema' no cabeçalho, o qual será 'mascarado' a hora 
+que fizermos o JOIN, isso acontece pois a coluna que relaciona as duas tabelas, no caso, a coluna
+'generation' não possui campos NULL na tabela generation_gustavo, esse 'problema' está apenas na tabela 
+'pokemon_gustavo'. É por isso, que ao fazer JOIN, o problema é 'mascarado'. Se houvessem campos NULL 
+na tabela 'generation_gustavo', o problema continuaria.
 
-# OBSERVAÇÃO: essa tabela ficará com um 'problema' no cabeçalho, o qual será corrigido automaticamente a hora que fizermos o JOIN
-# Feito isso, executaremos um join entre as duas tabelas no Hive e no Impala e compararemos o tempo de execução.
+-- NOTA: para que isso não tivesse acontecido, a tabela deveria ter sido criada do seguinte modo:
+
+CREATE TABLE work_dataeng.pokemon_gustavo_teste (
+idnum INT,
+name STRING,
+hp INT,
+speed INT,
+attack INT,
+special_attack INT,
+defense INT,
+special_defense INT,
+generation INT
+)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE tblproperties ("skip.header.line.count"="1");
+==================================================================================================
+-- Feito isso, executaremos um join entre as duas tabelas no Hive e no Impala e compararemos o tempo de execução.
+
+-- O comando tblproperties ("skip.header.line.count"="1") ignora a primeira linha de csv ao carregar na tabela Hive.
 
 SELECT * FROM work_dataeng.generation_gustavo 
 JOIN work_dataeng.pokemon_gustavo 
@@ -103,26 +89,19 @@ Time Taken Hive: 708.608 seconds
 
 Time Taken Impala: 1.42 seconds
 
-# OBSERVAÇÃO: o IMPALA não aceita o tipo DATE, portanto, a coluna date_introduced NÃO deve ser selecionada.
-# Fiz isso da seguinte maneira:
-# Aqui também foram usados alguns aliases, para que nosso script fique mais sucinto.
+-- OBSERVAÇÃO: o IMPALA não aceita o tipo DATE, portanto, a coluna date_introduced NÃO deve ser selecionada.
+-- Fiz isso da seguinte maneira:
+-- Aqui também foram usados alguns aliases, para que nosso código fique mais sucinto.
 
-SELECT pg.*, gg.generation as gen # Seleciona todas as colunas da pokemon_gustavo e apenas a coluna 'generation' da tabela generation_gustavo
+
+SELECT pg.*, gg.generation as gen -- Seleciona todas as colunas da pokemon_gustavo e apenas a coluna 'generation' da tabela generation_gustavo
 FROM 
 work_dataeng.generation_gustavo gg JOIN work_dataeng.pokemon_gustavo pg 
 ON gg.generation = pg.generation 
 
 
-# Pode-se observar que o Impala é mais rápido. 
-
-# Agora, podemos ir no 'git bash', usar os comandos necessários para comitar a branch hive-sqoop.
-
-git add --all
-git commit -m " hive-sqoop "
-git push -u origin hive-sqoop
-
-# No Git Hub, fazemos o pull request e o merge.
-# Tarefa finalizada.
+-- Pode-se observar que o Impala é mais rápido. 
+-- Tarefa finalizada.
 
 
 

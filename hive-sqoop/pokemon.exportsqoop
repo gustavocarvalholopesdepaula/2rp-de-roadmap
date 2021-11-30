@@ -1,0 +1,7 @@
+sqoop export 
+--export-dir
+'hdfs://bigdataclu-ns/user/hive/warehouse/work_dataeng.db/pokemon_gustavo' \
+--table 
+work_dataeng.pokemon_gustavo 
+--columns
+idnum,name,hp,speed

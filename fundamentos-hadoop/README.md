@@ -8,7 +8,7 @@ Para salvar um arquivo em HDFS, o Hadoop divide o arquivo em blocos, de 64 ou 12
 Alguns comandos:
 
 $ vagrant ssh pocd-cm581-dev-node/
-# Importa o conteúdo do servidor para o computador. Neste caso, o servidor é ' pocd-cm581-dev-node/ '
+# Importa o conteúdo do servidor para o computador. Neste caso, o usuário é 'vagrant' e o servidor é ' pocd-cm581-dev-node/ '
 
 $ hostname 
 # Mostra o endereço eletrônico do servidor
@@ -18,6 +18,13 @@ $ df
 
 $ df -h
 # Mostra o espaço usado/disponível em Mb/Gb/Kb ao invés de bloco.
+
+
+$ view part 00000
+# Abri o arquivo part 00000
+
+$ wc-l part 00000
+# Conta as linhas do arquivo
 
 $ du
 # Fornece a quantidade de espaço ocupada por cada subdiretório que se encontra abaixo do diretório atual.

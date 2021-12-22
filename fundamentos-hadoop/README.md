@@ -99,3 +99,100 @@ $ hdfs dfs mv nomedoarq.txt / nomedoarqnovo.txt
 
 $ hdfs dfs -touchz
 # Cria um arquivo vazio. O comando 'hdfs dfs -appendToFile' é muito útil para adicionar informações a este arquivo.
+
+# HADOOP
+
+hadoop fs or hdfs dfs 
+# list all the commands available
+
+hadoop fs -usage 
+# will give us basic usage for given command
+
+hadoop fs -help 
+# will give us additional information for all the commands. It is same as just running hadoop fs or hdfs dfs.
+# We can run help on individual commands as well - example: hadoop fs -help ls or hdfs dfs -help ls
+
+hdfs dfs -ls /public/nyse_all/nyse_data # Lista os arquivos da pasta passada.
+
+ls -lhtr /data/crime/csv
+# Lista os arquivos presenres na pasta passada e os seus tamanhos.
+
+hdfs dfs -ls -r /public/nyse_all/nyse_data
+
+# We can sort the files and directories by time using -t option. 
+# By default you will see latest files at top. We can reverse it by using -t -r.
+
+hdfs dfs -ls -t /public/nyse_all/nyse_data
+
+hdfs dfs -ls -t -r /public/nyse_all/nyse_data
+
+# We can sort the files and directories by size using -S. By default, the files will be sorted in descending order by size.
+# We can reverse the sorting order using -S -r.
+
+hdfs dfs -ls -S /public/nyse_all/nyse_data
+
+hdfs dfs -ls -S -r /public/nyse_all/nyse_data
+
+hdfs dfs -ls -S -r /public/nyse_all/nyse_data
+
+hdfs dfs -ls -h -t /public/nyse_all/nyse_data
+
+hdfs dfs -ls -h -S /public/nyse_all/nyse_data
+
+hdfs dfs -ls -h -S /public/nyse_all/nyse_data
+
+hadoop fs -mkdir or hdfs dfs -mkdir 
+# to create directories
+# You can create the directory structure using mkdir -p. 
+# The existing folders will be ignored and non existing folders will be created.
+
+hadoop fs -chown or hdfs dfs -chown 
+# to change ownership of files
+# We can change the group using -chgrp command as well.
+
+
+hdfs dfs -rmdir /user/${USER}/retail_db/orders/year=2020
+# 'hdfs dfs -rmdir' deleta um diretório vazio
+
+hdfs dfs -rm -R
+# Deleta um diretório que não está vazio
+
+hdfs dfs -rm -R -skipTrash /user/${USER}/crime
+# Deleta /user/itversity/crime da lixeira.
+
+hdfs dfs -copyFromLocal or hdfs dfs -put 
+# to copy files or directories from local filesystem into HDFS.
+# We can also use hadoop fs in place of hdfs dfs
+
+hdfs dfs -copyToLocal or hdfs dfs -get 
+# to copy files or directories from HDFS to local filesystem.
+
+hdfs fsck retail_db
+# We can get high level overview for a retail_db folder by using .
+# hdfs fsck get the metadata for the files stored in HDFS
+
+hdfs dfs -tail
+# can be used to preview last 1 KB of the file
+
+hdfs dfs -cat 
+# can be used to print the whole contents of the file on the screen.
+# Be careful while using -cat as it will take a while for even medium sized files.
+
+hdfs fsck /public/yelp-dataset-json/yelp_academic_dataset_user.json \
+    -files \
+    -blocks \
+    -locations
+# Esse comando vai dar detalhes da pasta passada, incluindo arquivos, blocos e localização
+
+hdfs dfs -stat
+# Print statistics about the file/directory at <path> in the specified format. 
+# Format accepts filesize in blocks (%b), type (%F), group name of owner (%g),
+# name (%n), block size (%o), replication (%r), user name of owner (%u), modification date (%y, %Y).
+#  %y shows UTC date as "yyyy-MM-dd HH:mm:ss" and %Y shows milliseconds since January 1, 1970 UTC.
+# If the format is not specified, %y is used by default.
+
+hdfs dfs -df
+# to get the current capacity and usage of HDFS.
+
+hdfs dfs -du
+# to get the size occupied by a file or folder.

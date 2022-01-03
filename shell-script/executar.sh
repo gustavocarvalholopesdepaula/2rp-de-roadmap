@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./funcoes.sh 
+source $(dirname $0)/funcoes.sh # busca o diretorio aonde está o arquivo
 
 declare -a LISTA
 

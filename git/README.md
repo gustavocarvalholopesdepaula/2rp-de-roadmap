@@ -109,6 +109,12 @@ git push --set-upstream origin 2rp
 git push -u origin 2rp
 # Envia a branch 2rp para o GitHub
 
+git branch -d nome-da-branch 
+# Deleta uma branch
+
+git branch -D nome-da-branch
+# Força a remoção da branch
+
 
 
 

@@ -1,0 +1,56 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  name: AZURE DEPLOYER
+
+variables:
+- group: environment
+- name: airflow_home
+  value: $[variables.AIRFLOW_HOME_DAGS]
+
+steps:
+- script: pip install pytest
+
+- task: PythonScript@0
+  inputs:
+    scriptSource: 'filePath'
+    scriptPath: '/home/airflow/airflow/unittests/pytest_dag_validation.py'
+    arguments: '$(Build.SourcesDirectory)/99_util/dags/DAG_de_gustavo_dev.py'
+    pythonInterpreter: '/usr/bin/python3.6'
+    
+- task: CopyFiles@1
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/'
+    Contents: |
+      **/*
+      !.git/**/*
+    TargetFolder: '/home/2rp-gustavo/deploy/squad-de-roadmap'
+    CleanTargetFolder: true
+    OverWrite: true
+  displayName: 'Copying from master to local'
+
+- task: CopyFiles@1
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/99_util/dags'
+    Contents: |
+      /*
+    TargetFolder: '$(AIRFLOW_HOME_DAGS)/squad-de-roadmap/'
+    CleanTargetFolder: false
+    OverWrite: true
+  displayName: 'Copying DAG file'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: sh /home/azure_deployer/scripts/distribute_repo_to_workers.sh squad-de-roadmap 2rp-gustavo
+  displayName: 'Distributing to Workers'
+
+
+
+

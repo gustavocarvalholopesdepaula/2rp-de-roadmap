@@ -816,6 +816,7 @@ ARRAY, MAP, STRUCT type columns
 # 'col','lit'
 # Funções muito usadas para converter dados do tipo strings em dados do tipo coluna
 # 'col' é a fução usada para converter o nome da coluna do tipo 'string'para o tipo'column'
+import struct
 from pyspark.sql.functions import col
 employeesDF. \
     select(col("first_name"), col("last_name")). \
@@ -1404,3 +1405,46 @@ date_format
 # Retorna o tempo e o número de dias que se passaram desde o surgimento do Linux.
 from_unixtime, to_unix_timestamp
 
+
+# Converte uma coluna contendo um StructType, ArrayType ou um MapType em uma string JSON. 
+# Lança uma exceção, no caso de um tipo não suportado.
+to_json
+
+# Cria uma nova estrutura de coluna
+struct
+
+# Retorna uma coluna com base no nome de coluna fornecido.
+col
+
+# Lambda funcitons/ map functions
+
+preco = 1000
+
+def calcular_imposto(preco):
+    return preco * 0.3
+    
+print(calcular_imposto(preco))
+
+
+
+
+calcular_imposto2 = lambda x: x * 0.3
+
+print(calcular_imposto2(preco))
+
+
+
+precos = [100, 500, 10, 25]
+
+imposto = list(map( lambda x: x * 0.3, precos))
+
+print(imposto)
+
+
+
+
+precoss = [1000, 1500, 1250, 2500]
+
+precos_com_imposto = list(map(lambda x: x * 1.1, precoss))
+
+print(precos_com_imposto)
